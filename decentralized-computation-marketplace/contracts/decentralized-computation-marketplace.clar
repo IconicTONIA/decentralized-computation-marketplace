@@ -219,3 +219,69 @@
     blacklisted-by: principal
   }
 )
+
+;; Task categories and subcategories
+(define-map task-categories
+  (string-utf8 50)
+  {
+    subcategories: (list 10 (string-utf8 50)),
+    active: bool,
+    minimum-reputation: uint
+  }
+)
+
+;; Market status
+(define-data-var market-active bool true)
+
+;; User dashboard stats
+(define-map user-stats
+  principal
+  {
+    total-earned: uint,
+    total-spent: uint,
+    tasks-created: uint,
+    tasks-completed: uint,
+    avg-task-complexity: uint,
+    favorite-categories: (list 3 (string-utf8 50)),
+    last-login: uint,
+    membership-tier: uint
+  }
+)
+
+;; Task templates
+(define-map task-templates
+  {template-id: uint}
+  {
+    name: (string-utf8 50),
+    description: (string-utf8 200),
+    default-bounty: uint,
+    default-stake: uint,
+    default-complexity: uint,
+    category: (string-utf8 50),
+    creator: principal,
+    is-public: bool,
+    created-at: uint,
+    metadata: (string-utf8 200)
+  }
+)
+
+;; Template counter
+(define-data-var template-id-counter uint u0)
+
+;; Dispute data
+(define-map disputes
+  {task-id: uint}
+  {
+    initiator: principal,
+    respondent: principal,
+    evidence-hash: (buff 32),
+    arbiter: (optional principal),
+    status: uint,
+    created-at: uint,
+    resolution: (optional {
+      winner: principal,
+      resolution-note: (string-utf8 200),
+      bounty-distribution: (list 5 {recipient: principal, amount: uint})
+    })
+  }
+)
